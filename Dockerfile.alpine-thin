@@ -1,0 +1,52 @@
+# syntax=docker/dockerfile:1
+FROM alpine:latest as build
+LABEL stage=motionbuilder
+RUN apk add \
+    autoconf \
+    automake \
+    ca-certificates \
+    ffmpeg-dev \
+    g++ \
+    git \
+    gettext \
+    gettext-dev \
+    jpeg \
+    jpeg-dev \
+    libmicrohttpd-dev \
+    libtool \
+    libzip-dev \
+    make \
+    pkgconf 
+
+RUN git clone https://github.com/Motion-Project/motion.git && \
+   cd motion  && \
+   autoreconf -fiv && \
+   ./configure \
+   --without-bktr \
+   --without-v4l2 \
+   --without-webp \
+   --without-mysql \
+   --without-mariadb \
+   --without-pgsql \
+   --without-sqlite3 && \
+   make clean && \
+   make \
+   && \
+   make install && \
+   cd .. && \
+   rm -fr motion
+
+FROM alpine:latest
+COPY --from=build /usr/local /usr/local
+RUN apk add \
+    curl \
+    ffmpeg \
+    jpeg \
+    libmicrohttpd
+VOLUME /usr/local/etc/motion
+VOLUME /etc/motion/conf.d
+VOLUME /var/lib/motion
+HEALTHCHECK CMD curl -f http://localhost:8080 || exit 1
+EXPOSE 8080/tcp
+EXPOSE 80/tcp
+CMD [ "motion", "-n" ]

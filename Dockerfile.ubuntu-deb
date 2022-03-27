@@ -1,0 +1,26 @@
+# syntax=docker/dockerfile:1
+FROM ubuntu:focal
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libavcodec58 \
+    libavdevice58 \
+    libavformat58 \
+    libavutil56 \
+    libjpeg8 \
+    libmariadb3 \
+    libmicrohttpd12 \
+    libpq5 \
+    libswscale5 \
+    libwebp6 \
+    libwebpmux3 \
+    curl \
+ && rm -rf /var/lib/apt/lists/*
+ADD https://github.com/Motion-Project/motion/releases/download/release-4.4.0/focal_motion_4.4.0-1_amd64.deb motion.deb
+RUN apt install ./motion.deb
+COPY override.conf /etc/systemd/system/motion.service.d/override.conf
+VOLUME /etc/motion
+VOLUME /etc/motion/conf.d
+VOLUME /var/lib/motion
+HEALTHCHECK CMD curl -f http://localhost:8080 || exit 1
+EXPOSE 8080/tcp
+EXPOSE 80/tcp
+CMD [ "motion", "-n" ]

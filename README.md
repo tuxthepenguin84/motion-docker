@@ -1,53 +1,21 @@
 # motion-docker
 
-This container is built automatically whenever code is pushed to master at https://github.com/Motion-Project/motion-docker.
+This is an unofficial fork of https://github.com/Motion-Project/motion-docker.
 
 ## Caveats
-- If you use /dev/video, locally attached cameras or the database features of Motion, this container won't work for you at this stage.  
-- This is built directly from git master, if you want something more stable grab a prebuilt release from [here](https://github.com/Motion-Project/motion/releases) and install manually.
+
+- Probably several :) I'm new to docker but I'm building this for use in my home lab and wanted to share.
 
 ## How to run
 
-something like this;
+See docker-compose*.yml files
 
-```
-docker run -d --name=motion \
-    -p 7999:7999 \
-    -p 8081:8081 \
-    -p 8082:8082 \
-    -p 8083:8083 \
-    -p 8084:8084 \
-    -p 8085:8085 \
-    -p 8087:8087 \
-    -e TZ="Australia/Brisbane" \
-    -v /volume1/motion/config:/usr/local/etc/motion \
-    -v /volume1/motion/storage:/var/lib/motion \
-    --restart=always \
-    motionproject/motion:latest
-```
-## How to Update
+There's a Alpine Dockerfile and docker-compose file that removes functionality (and reduces size) I do not use and there's a Ubuntu Dockerfile and docker-compose that's based on the .deb file
 
-```
-docker stop motion
-docker rm motion
-docker pull motionproject/motion:latest
-- rerun above 'run' command
-```
+## Dockerhub
 
-
-## Things you may need to change
-- name = a label for the container, should be motion or motion-project (but can be anything)
-- ports = each -p line denotes 1 camera and its stream port
-- TZ = the timezone the container will be running
-- volumes = /dockerserver/path/to/config
-          = /dockerserver/path/to/storage
+See https://hub.docker.com/r/tuxthepenguin/motion for different versions and tags
           
 ## Release Notes
 
-- 29/09/20 Use multi-stage build
-- 29/01/20 Triggered new build to bump to 4.3.0
-- 21/01/19 Triggered new build to capture passthrough fixes from git master
-- 30/11/18 Bumped to Ubuntu 18.04
-- 30/11/18 Cosmetic changes and added x264 package
-- 29/11/18 Initial build of Docker container 
-- 29/10/18 Motion 4.2 released
+- Initial Clone
