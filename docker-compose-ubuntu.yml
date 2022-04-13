@@ -4,16 +4,13 @@ services:
     image: tuxthepenguin/motion:ubuntu-latest
     container_name: motion
     networks:
-      - haproxy
+      - mynetwork
     volumes:
       - ./data/config:/etc/motion
       - ./data/config/conf.d:/etc/motion/conf.d
+      - ./data/pictures:/pictures
       - /etc/localtime:/etc/localtime:ro
-    #ports:
-    #  - '8080:8080'
-    #  - '80:80'
+    ports:
+      - '8080:8080'
+      - '8081:8081'
     restart: unless-stopped
-
-networks:
-  haproxy:
-    external: true

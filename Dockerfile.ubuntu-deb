@@ -22,5 +22,5 @@ VOLUME /etc/motion/conf.d
 VOLUME /var/lib/motion
 HEALTHCHECK CMD curl -f http://localhost:8080 || exit 1
 EXPOSE 8080/tcp
-EXPOSE 80/tcp
+EXPOSE 8081/tcp
 CMD [ "motion", "-n" ]
